@@ -1,96 +1,618 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
-    <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
-    </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hotseat — Passe/Tir 360° (2 joueurs)</title>
+<style>
+  :root{ --blue:#178bff; --red:#ff3b30; --grass:#117a37; --chip:#1d2633; --chipOn:#2f3b52; --chipBorder:rgba(255,255,255,.18);} 
+  html,body{ margin:0; background:#0b3d1f; color:#fff; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Helvetica,Arial }
+  header{ padding:10px 14px; display:flex; gap:16px; flex-wrap:wrap; align-items:center; border-bottom:1px solid rgba(255,255,255,.15) }
+  /* Hiérarchie de polices */
+  .scorebar{ display:flex; gap:14px; align-items:center; flex:1; min-width:280px }
+  .scoretxt{ font-weight:900; font-size:18px; letter-spacing:.2px }
+  .sub{ font-weight:600; font-size:13px; opacity:.95 }
+  .dot{ width:10px; height:10px; border-radius:999px; display:inline-block }
+  .dot.active{ box-shadow:0 0 0 3px rgba(255,255,255,.18), 0 0 10px rgba(255,255,255,.5) }
+  .chip{ display:inline-flex; gap:6px; align-items:center; padding:6px 10px; border-radius:999px; border:1px solid var(--chipBorder); background:var(--chip); font-weight:700; font-size:12px }
+  .chip button{ all:unset; cursor:pointer; }
+  .chip.on{ background:var(--chipOn) }
+  .toolbar{ display:flex; gap:8px; align-items:center }
+  .btn{ display:inline-grid; place-items:center; width:32px; height:32px; border-radius:10px; border:1px solid var(--chipBorder); background:rgba(255,255,255,.08); cursor:pointer }
+  .btn:hover{ background:rgba(255,255,255,.14) }
+  .btn:active{ transform:translateY(1px) }
+  .btn svg{ width:18px; height:18px; fill:currentColor }
+
+  #wrap{ max-width:min(95vw,1280px); margin:10px auto 12px; display:flex; flex-direction:column; gap:10px; align-items:center }
+  canvas{ background:var(--grass); border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,.25), inset 0 0 0 2px rgba(255,255,255,.08); width:100%; height:auto; touch-action:none }
+
+  /* Panneau aide (contrasté) */
+  .side{ position:fixed; top:0; right:0; width:min(420px,95vw); height:100dvh; background:#0f1420; border-left:1px solid var(--chipBorder); transform:translateX(100%); transition:transform .25s ease; box-shadow:-12px 0 30px rgba(0,0,0,.35); z-index:20 }
+  .side.open{ transform:translateX(0) }
+  .side header{ display:flex; justify-content:space-between; align-items:center; padding:14px; border-bottom:1px solid var(--chipBorder) }
+  .side .content{ padding:12px 14px 24px; font-size:14px; line-height:1.45 }
+  .side h3{ margin:12px 0 6px; font-size:16px }
+  .table{ width:100%; border-collapse:separate; border-spacing:0 6px }
+  .table th,.table td{ text-align:left; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,.06); border:1px solid var(--chipBorder); font-size:13px }
+
+  /* Micro-log */
+  #log{ position:fixed; left:12px; bottom:12px; display:flex; flex-direction:column; gap:6px; z-index:15 }
+  .logline{ padding:6px 10px; background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.18); border-radius:10px; font-size:12px; backdrop-filter:blur(4px) }
+
+  footer{ opacity:.7; text-align:center; font-size:12px; margin:6px 0 14px }
+</style>
+</head>
+<body>
+<header>
+  <div class="scorebar">
+    <span class="scoretxt" id="scoreLine">
+      <span class="dot" style="background:var(--blue)"></span>
+      <span>Bleu <span id="scoreBlue">0</span> — <span id="scoreRed">0</span> Rouge</span>
+      <span class="sub">· Tour: <span id="turnTeam">Bleu</span> <span class="dot" id="turnDot"></span></span>
+    </span>
+    <span class="chip" id="posChip">Balle: <strong id="posOwner">(libre)</strong></span>
+    <span class="chip" id="modeChip" title="Espace pour changer">
+      <button id="modeBtn">Mode: <strong id="modeTxt">Mouvement</strong></button>
+    </span>
+  </div>
+  <div class="toolbar">
+    <button class="btn" id="helpBtn" title="Règles & aide">
+      <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2a2 2 0 1 1 2 2c-.55 0-1 .45-1 1v2h2v-1.08c1.72-.45 3-2 3-3.92 0-2.21-1.79-4-4-4z"/></svg>
+    </button>
+    <button class="btn" id="newBtn" title="Nouvelle partie (N)">
+      <svg viewBox="0 0 24 24"><path d="M12 5v4l5-5-5-5v4C6.48 3 2 7.48 2 13c0 2.5.92 4.78 2.44 6.55l1.42-1.42A7.96 7.96 0 0 1 4 13c0-4.42 3.58-8 8-8z"/></svg>
+    </button>
+    <button class="btn" id="soundBtn" title="Son on/off">
+      <svg id="soundIcon" viewBox="0 0 24 24"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a4.5 4.5 0 0 0-3-4.24v8.47A4.5 4.5 0 0 0 16.5 12z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div id="wrap">
+  <canvas id="field" width="1920" height="1088" aria-label="Terrain de jeu"></canvas>
+</div>
+
+<!-- Panneau aide -->
+<aside id="side" class="side" aria-hidden="true">
+  <header>
+    <strong>Aide & Règles</strong>
+    <button class="btn" id="closeSide" title="Fermer">✕</button>
+  </header>
+  <div class="content">
+    <h3>Règles (résumé)</h3>
+    <ul>
+      <li>Passe/Tir 360° : s'arrête à la première collision (joueur, panier, bord).</li>
+      <li>Bord : balle posée sur la case, touche pour l'adversaire (joueur le plus proche).</li>
+      <li>Vol : entrer sur la case du porteur adverse = prise + porteur repoussé (si possible).</li>
+      <li>Panier : +1. Après panier : reset positions, balle au centre pour l'autre équipe (#1).</li>
+      <li>Victoire à 5 points.</li>
+    </ul>
+    <h3>Contrôles</h3>
+    <table class="table">
+      <tr><th>Action</th><th>Clavier</th></tr>
+      <tr><td>Déplacer (mode Mouvement)</td><td>Flèches</td></tr>
+      <tr><td>Basculer Tir/Passe</td><td>Espace</td></tr>
+      <tr><td>Tourner gros / fin</td><td>← → (7,5°) · ↑ ↓ (1°)</td></tr>
+      <tr><td>Tirer / Passer</td><td>Entrée</td></tr>
+      <tr><td>Choisir joueur</td><td>1..8 · Tab suivant</td></tr>
+      <tr><td>Nouvelle partie / Aide</td><td>N / H</td></tr>
+    </table>
+    <p class="sub">Astuce : en mode Tir/Passe, suivez la jauge d'angle et la ligne pointillée.</p>
+  </div>
+</aside>
+
+<!-- Micro-log -->
+<div id="log" aria-live="polite"></div>
+
+<footer>2 joueurs au clavier (hotseat) — tir/passe 360° avec animation.</footer>
+
+<script>
+/* ====== Paramètres ====== */
+var COLS = 30, ROWS = 17, CELL = 64, GOAL_TO_WIN = 5;
+var MIDROW = Math.floor(ROWS/2);
+var COLORS = {
+  grid:"rgba(255,255,255,0.08)",
+  aim:"#ffffff",
+  aimShadow:"rgba(0,0,0,0.35)",
+  ball:"#ffb000",
+  loose:"#ffd24d",
+  blue:"#178bff",
+  red:"#ff3b30",
+  basket:"rgba(255,255,255,0.22)",
+  basketLine:"rgba(255,255,255,0.9)"
+};
+
+/* ====== Canvas ====== */
+var canvas = document.getElementById('field');
+var ctx = canvas.getContext('2d');
+function fitCanvas(){ canvas.width = COLS*CELL; canvas.height = ROWS*CELL; }
+addEventListener('resize', function(){ fitCanvas(); draw(); });
+
+/* ====== Modèle ====== */
+var Team = { BLUE:'blue', RED:'red' };
+var state;
+function deepCopy(obj){ return JSON.parse(JSON.stringify(obj)); }
+
+function newGame(){
+  state = {
+    current: Team.BLUE,
+    mode: 'move',          // 'move' | 'aim'
+    angle: 0,              // radians (flèche 360°)
+    selectedIndex: { blue:0, red:0 },
+    score: { blue:0, red:0 },
+    players: { blue:[], red:[] },
+    initPositions: { blue:[], red:[] },
+    ball: { x: Math.floor(COLS/2), y: Math.floor(ROWS/2), ownerTeam:null, ownerId:null, anim:null },
+    temp: { showHelp:false, gameOver:false, animActive:false, log:[] },
+    settings: { sound:true }
+  };
+
+  // 8 joueurs par équipe : 2 colonnes × 4 rangs
+  var rowsY = [MIDROW-4, MIDROW-1, MIDROW+1, MIDROW+4];
+  var blueCols = [3,5];
+  var redCols  = [COLS-6, COLS-4];
+
+  var i, c, y, id;
+  id=1;
+  for(i=0;i<blueCols.length;i++){
+    c = blueCols[i];
+    for(y=0;y<rowsY.length;y++){
+      var pb = {id:id, team:Team.BLUE, x:c, y:rowsY[y]};
+      state.players.blue.push(deepCopy(pb));
+      state.initPositions.blue.push(deepCopy(pb));
+      id++; if(id>8) break;
+    }
+    if(id>8) break;
+  }
+  id=1;
+  for(i=0;i<redCols.length;i++){
+    c = redCols[i];
+    for(y=0;y<rowsY.length;y++){
+      var pr = {id:id, team:Team.RED, x:c, y:rowsY[y]};
+      state.players.red.push(deepCopy(pr));
+      state.initPositions.red.push(deepCopy(pr));
+      id++; if(id>8) break;
+    }
+    if(id>8) break;
+  }
+
+  // restaurer état panneau aide
+  try{ if(localStorage.getItem('helpOpen')==='1') openSide(); }catch(e){}
+
+  updateBadges(); draw();
+}
+
+/* ====== Paniers ====== */
+var LEFT_GOAL  = { x:0, y:MIDROW };
+var RIGHT_GOAL = { x:COLS-1, y:MIDROW };
+function isBasketCell(x,y){ return (x===LEFT_GOAL.x && y===LEFT_GOAL.y) || (x===RIGHT_GOAL.x && y===RIGHT_GOAL.y); }
+
+/* ====== Utilitaires ====== */
+function inside(x,y){ return x>=0 && y>=0 && x<COLS && y<ROWS; }
+function occAt(x,y){
+  var k;
+  for(k=0;k<state.players.blue.length;k++){ if(state.players.blue[k].x===x && state.players.blue[k].y===y) return state.players.blue[k]; }
+  for(k=0;k<state.players.red.length;k++){ if(state.players.red[k].x===x && state.players.red[k].y===y) return state.players.red[k]; }
+  return null;
+}
+function isBallOwned(){ return state.ball.ownerTeam !== null; }
+function ownerObj(){
+  if(!isBallOwned()) return null;
+  var arr = state.players[state.ball.ownerTeam];
+  var k; for(k=0;k<arr.length;k++){ if(arr[k].id===state.ball.ownerId) return arr[k]; }
+  return null;
+}
+function setOwner(p){
+  if(p){ state.ball.ownerTeam=p.team; state.ball.ownerId=p.id; state.ball.x=p.x; state.ball.y=p.y; }
+  else { state.ball.ownerTeam=null; state.ball.ownerId=null; }
+}
+
+/* ====== Audio (toggleable) ====== */
+var AudioCtx = window.AudioContext || window.webkitAudioContext;
+var audioCtx = null;
+function ensureAudio(){ try{ if(!audioCtx && AudioCtx && state.settings.sound){ audioCtx = new AudioCtx(); } }catch(e){} }
+function bip(f,d,type,g){
+  if(!state.settings.sound) return;
+  try{ ensureAudio(); if(!audioCtx) return;
+    var o=audioCtx.createOscillator(), gain=audioCtx.createGain();
+    o.type=type; o.frequency.value=f; gain.gain.value=g;
+    o.connect(gain); gain.connect(audioCtx.destination); o.start();
+    setTimeout(function(){ try{o.stop();}catch(e){} }, d*1000);
+  }catch(e){}
+}
+function sMove(){ bip(520,.05,'triangle',.07); }
+function sCatch(){ bip(320,.08,'triangle',.09); }
+function sError(){ bip(180,.08,'sawtooth',.06); }
+function sGoal(){ bip(660,.10,'square',.12); setTimeout(function(){ bip(880,.20,'square',.10); },110); }
+function sTurn(){ bip(420,.06,'sine',.06); }
+
+/* ====== Dessin ====== */
+function drawField(){
+  var grass = getComputedStyle(document.documentElement).getPropertyValue('--grass') || "#117a37";
+  ctx.fillStyle = grass; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  var c,r; ctx.strokeStyle = COLORS.grid; ctx.lineWidth = 1;
+  for(c=0;c<=COLS;c++){ ctx.beginPath(); ctx.moveTo(c*CELL,0); ctx.lineTo(c*CELL,ROWS*CELL); ctx.stroke(); }
+  for(r=0;r<=ROWS;r++){ ctx.beginPath(); ctx.moveTo(0,r*CELL); ctx.lineTo(COLS*CELL,r*CELL); ctx.stroke(); }
+
+  ctx.strokeStyle="rgba(255,255,255,.35)"; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(COLS*CELL/2, ROWS*CELL/2, CELL*1.2, 0, Math.PI*2); ctx.stroke();
+
+  drawBasketCell(LEFT_GOAL.x, LEFT_GOAL.y);
+  drawBasketCell(RIGHT_GOAL.x, RIGHT_GOAL.y);
+}
+function drawBasketCell(x,y){
+  var px=x*CELL, py=y*CELL;
+  ctx.fillStyle = COLORS.basket;
+  ctx.fillRect(px,py,CELL,CELL);
+  ctx.strokeStyle = COLORS.basketLine; ctx.lineWidth=3;
+  ctx.strokeRect(px+1.5,py+1.5,CELL-3,CELL-3);
+  ctx.beginPath(); ctx.arc(px+CELL/2, py+CELL/2, CELL*0.28, 0, Math.PI*2); ctx.stroke();
+}
+
+function drawPlayers(){
+  var selB = state.players.blue[state.selectedIndex.blue];
+  var selR = state.players.red[state.selectedIndex.red];
+  var k;
+
+  function drawOne(p,color,selected,hasBall){
+    var cx=(p.x+0.5)*CELL, cy=(p.y+0.5)*CELL;
+    // Joueur actif = disque NOIR (demande)
+    var fillCol = selected ? "#000" : color;
+    ctx.beginPath(); ctx.arc(cx,cy,CELL*0.40,0,Math.PI*2);
+    ctx.fillStyle=fillCol; ctx.fill();
+    ctx.lineWidth=3; ctx.strokeStyle="rgba(0,0,0,.35)"; ctx.stroke();
+
+    ctx.fillStyle="#ffffff"; ctx.font="bold "+Math.floor(CELL*0.30)+"px system-ui";
+    ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(String(p.id), cx, cy);
+
+    if(hasBall && !state.temp.animActive){
+      ctx.beginPath(); ctx.arc(cx+CELL*0.22, cy-CELL*0.22, CELL*0.17, 0, Math.PI*2);
+      ctx.fillStyle=COLORS.ball; ctx.fill();
+      ctx.lineWidth=2; ctx.strokeStyle="rgba(0,0,0,.45)"; ctx.stroke();
+    }
+  }
+
+  for(k=0;k<state.players.blue.length;k++){
+    var pb = state.players.blue[k];
+    drawOne(pb, COLORS.blue, (state.current===Team.BLUE && pb===selB), (isBallOwned() && state.ball.ownerTeam===Team.BLUE && state.ball.ownerId===pb.id));
+  }
+  for(k=0;k<state.players.red.length;k++){
+    var pr = state.players.red[k];
+    drawOne(pr, COLORS.red, (state.current===Team.RED && pr===selR), (isBallOwned() && state.ball.ownerTeam===Team.RED && state.ball.ownerId===pr.id));
+  }
+}
+
+function drawBallLoose(){
+  if(state.temp.animActive && state.ball.anim){
+    var px = state.ball.anim.px, py = state.ball.anim.py;
+    ctx.beginPath(); ctx.arc(px, py, CELL*0.18, 0, Math.PI*2);
+    ctx.fillStyle=COLORS.ball; ctx.fill();
+    ctx.lineWidth=2.5; ctx.strokeStyle="rgba(0,0,0,.5)"; ctx.stroke();
+    return;
+  }
+  if(isBallOwned()) return;
+  var cx=(state.ball.x+0.5)*CELL, cy=(state.ball.y+0.5)*CELL;
+  ctx.beginPath(); ctx.arc(cx,cy,CELL*0.18,0,Math.PI*2);
+  ctx.fillStyle=COLORS.loose; ctx.fill();
+  ctx.lineWidth=2.5; ctx.strokeStyle="rgba(0,0,0,.5)"; ctx.stroke();
+}
+
+function drawAim(){
+  if(state.mode!=='aim') return;
+  if(!(isBallOwned() && state.ball.ownerTeam===state.current)) return;
+  var holder = ownerObj(); if(!holder) return;
+  var sx=(holder.x+0.5)*CELL, sy=(holder.y+0.5)*CELL;
+  var len = CELL*2.4;
+  var ex = sx + Math.cos(state.angle)*len;
+  var ey = sy + Math.sin(state.angle)*len;
+  // ombre
+  ctx.strokeStyle = COLORS.aimShadow; ctx.lineWidth=7; ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ex,ey); ctx.stroke();
+  // trait
+  ctx.strokeStyle = COLORS.aim; ctx.lineWidth=3; ctx.setLineDash([10,7]);
+  ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ex,ey); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.arc(ex,ey,5,0,Math.PI*2); ctx.fillStyle=COLORS.aim; ctx.fill();
+
+  // —— Jauge d'angle près du porteur ——
+  var r = CELL*0.5;
+  ctx.save();
+  ctx.translate(sx, sy - CELL*0.9);
+  ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fill();
+  ctx.lineWidth=2; ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.stroke();
+  // aiguille
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(Math.cos(state.angle)*r*0.9, Math.sin(state.angle)*r*0.9);
+  ctx.strokeStyle='#fff'; ctx.lineWidth=3; ctx.stroke();
+  // texte degrés
+  ctx.fillStyle='#fff'; ctx.font='bold '+Math.floor(CELL*0.22)+'px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  var deg = Math.round((state.angle*180/Math.PI)%360); if(deg<0) deg+=360;
+  ctx.fillText(deg+"°", 0, 0);
+  ctx.restore();
+}
+
+function drawOverlay(){
+  if(!state.temp.gameOver) return;
+  ctx.save();
+  ctx.fillStyle="rgba(0,0,0,.5)"; ctx.fillRect(0,0,COLS*CELL,ROWS*CELL);
+  ctx.fillStyle="#fff"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.font="bold "+Math.floor(CELL*0.7)+"px system-ui";
+  var winner = state.score.blue>=GOAL_TO_WIN ? "Bleu" : "Rouge";
+  ctx.fillText("Victoire "+winner+" !", COLS*CELL/2, ROWS*CELL/2 - CELL*0.4);
+  ctx.font="500 "+Math.floor(CELL*0.35)+"px system-ui";
+  ctx.fillText("Appuyez sur N pour recommencer", COLS*CELL/2, ROWS*CELL/2 + CELL*0.2);
+  ctx.restore();
+}
+
+function draw(){ drawField(); drawAim(); drawPlayers(); drawBallLoose(); drawOverlay(); }
+
+/* ====== Micro-log ====== */
+function pushLog(msg){
+  state.temp.log.push({t:Date.now(), msg});
+  while(state.temp.log.length>2) state.temp.log.shift();
+  var c=document.getElementById('log'); c.innerHTML='';
+  state.temp.log.forEach(function(l){
+    var div=document.createElement('div'); div.className='logline'; div.textContent=l.msg; c.appendChild(div);
+    setTimeout(function(){ if(div.parentNode){ div.style.opacity='.0'; div.style.transition='opacity .8s linear'; setTimeout(()=>div.remove(),900); } }, 2000);
+  });
+}
+
+/* ====== HUD ====== */
+function updateBadges(){
+  document.getElementById('scoreBlue').textContent = String(state.score.blue);
+  document.getElementById('scoreRed').textContent = String(state.score.red);
+  document.getElementById('turnTeam').textContent = state.current===Team.BLUE?"Bleu":"Rouge";
+  document.getElementById('modeTxt').textContent = state.mode==='move'?"Mouvement":"Tir/Passe";
+  var poss = isBallOwned() ? ((state.ball.ownerTeam===Team.BLUE?"Bleu":"Rouge")+" #"+state.ball.ownerId) : "(libre)";
+  document.getElementById('posOwner').textContent = poss;
+  var dot=document.getElementById('turnDot');
+  dot.className='dot active'; dot.style.background = state.current===Team.BLUE?'var(--blue)':'var(--red)';
+}
+
+/* ====== Panneau aide (open/close) ====== */
+var side = document.getElementById('side');
+function openSide(){ side.classList.add('open'); side.setAttribute('aria-hidden','false'); try{localStorage.setItem('helpOpen','1');}catch(e){} }
+function closeSide(){ side.classList.remove('open'); side.setAttribute('aria-hidden','true'); try{localStorage.setItem('helpOpen','0');}catch(e){} }
+
+/* ====== Tours ====== */
+function setTurn(team){ state.current = team; state.mode='move'; state.angle=0; sTurn(); updateBadges(); draw(); }
+function nextTurn(){ setTurn(state.current===Team.BLUE?Team.RED:Team.BLUE); }
+function endAction(){ updateBadges(); draw(); if(!state.temp.gameOver) nextTurn(); }
+
+/* ====== Déplacements ====== */
+function tryMoveSelected(dx,dy){
+  if(state.temp.animActive) return;
+  var team = state.current;
+  var arr = state.players[team];
+  var p = arr[state.selectedIndex[team]];
+  var nx = p.x + dx, ny = p.y + dy;
+  if(!inside(nx,ny) || isBasketCell(nx,ny)){ sError(); return; }
+
+  var occ = occAt(nx,ny);
+  var holder = ownerObj();
+
+  if(occ){
+    if(occ.team===team){ sError(); return; }
+    var isOppHolder = isBallOwned() && occ.team!==team && state.ball.ownerId===occ.id && state.ball.ownerTeam===occ.team;
+    if(!isOppHolder){ sError(); return; }
+
+    var pushX = -dx, pushY = -dy;
+    var pushed = findPushSpot(occ.x+pushX, occ.y+pushY);
+    p.x = occ.x; p.y = occ.y;
+    if(pushed){ occ.x=pushed.x; occ.y=pushed.y; }
+    setOwner(p);
+    pushLog((team===Team.BLUE?'Bleu':'Rouge')+" vole la balle à #"+occ.id);
+    sCatch(); endAction(); return;
+  }
+
+  var carries = holder && holder.team===p.team && holder.id===p.id;
+  p.x = nx; p.y = ny;
+  if(carries){ state.ball.x=nx; state.ball.y=ny; }
+  else if(!isBallOwned() && state.ball.x===nx && state.ball.y===ny){ setOwner(p); sCatch(); pushLog("Balle récupérée par #"+p.id+" ("+(team===Team.BLUE?'Bleu':'Rouge')+")"); }
+  sMove(); endAction();
+}
+
+function findPushSpot(px,py){
+  var cand=[{x:px,y:py},{x:px+1,y:py},{x:px-1,y:py},{x:px,y:py+1},{x:px,y:py-1},{x:px+1,y:py+1},{x:px+1,y:py-1},{x:px-1,y:py+1},{x:px-1,y:py-1}];
+  for(var i=0;i<cand.length;i++){ var c=cand[i]; if(inside(c.x,c.y) && !occAt(c.x,c.y) && !isBasketCell(c.x,c.y)) return c; }
+  return null;
+}
+
+/* ====== Raycasting + Animation ====== */
+function cellCenterX(cx){ return (cx+0.5)*CELL; }
+function cellCenterY(cy){ return (cy+0.5)*CELL; }
+
+function computeRayCells(angle){
+  if(!(isBallOwned() && state.ball.ownerTeam===state.current)) return null;
+  var holder = ownerObj();
+  var ox = holder.x, oy = holder.y;
+  var dx = Math.cos(angle), dy = Math.sin(angle);
+  if(Math.abs(dx)<1e-6 && Math.abs(dy)<1e-6) return null;
+
+  var stepX = dx>0 ? 1 : -1;
+  var stepY = dy>0 ? 1 : -1;
+  function nextBoundary(coord, step){ return step>0 ? (Math.floor(coord)+1) : Math.ceil(coord)-1; }
+  var rx = (dx!==0) ? ( (nextBoundary(ox,stepX) - (ox+0.0001)) / dx ) : Infinity;
+  var ry = (dy!==0) ? ( (nextBoundary(oy,stepY) - (oy+0.0001)) / dy ) : Infinity;
+
+  var tMaxX = rx; var tMaxY = ry;
+  var tDeltaX = (dx!==0) ? Math.abs(1/dx) : Infinity;
+  var tDeltaY = (dy!==0) ? Math.abs(1/dy) : Infinity;
+
+  var cx = ox, cy = oy; var path = []; var hit=null, hitObj=null, lastValid={x:ox,y:oy};
+  function pushCell(ix,iy){ path.push({x:ix,y:iy}); }
+
+  while(true){
+    if(tMaxX < tMaxY){ cx += stepX; tMaxX += tDeltaX; } else { cy += stepY; tMaxY += tDeltaY; }
+    if(cx<0 || cy<0 || cx>=COLS || cy>=ROWS){ hit='edge'; break; }
+    if(isBasketCell(cx,cy)){ hit='basket'; pushCell(cx,cy); break; }
+    var occ = occAt(cx,cy);
+    if(occ){ hit='player'; hitObj=occ; pushCell(cx,cy); break; }
+    pushCell(cx,cy); lastValid = {x:cx,y:cy};
+  }
+  return { path:path, hit:hit, lastCell:lastValid, hitObj:hitObj };
+}
+
+function animateBallPath(cells, onEnd){
+  if(!cells || !cells.length){ if(onEnd) onEnd(); return; }
+  state.temp.animActive = true;
+  var sx, sy;
+  if(isBallOwned()){ var h=ownerObj(); sx = cellCenterX(h.x); sy = cellCenterY(h.y); }
+  else { sx = cellCenterX(state.ball.x); sy = cellCenterY(state.ball.y); }
+
+  var points = [{px:sx, py:sy}];
+  for(var i=0;i<cells.length;i++){ points.push({px:cellCenterX(cells[i].x), py:cellCenterY(cells[i].y)}); }
+
+  var seg = 0, prog = 0;
+  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var speed = CELL * (prefersReduced ? 10 : 16);
+  var lastTime = null;
+
+  state.ball.anim = { px:sx, py:sy };
+
+  function tick(ts){
+    if(lastTime===null) lastTime = ts;
+    var dt = Math.min(0.05, (ts - lastTime)/1000); lastTime = ts;
+    var safety=0;
+    while(dt>0 && seg < points.length-1 && safety<100){
+      safety++;
+      var ax=points[seg].px, ay=points[seg].py;
+      var bx=points[seg+1].px, by=points[seg+1].py;
+      var dx = bx-ax, dy = by-ay;
+      var dist = Math.hypot(dx,dy);
+      if(dist < 1e-6){ seg++; prog=0; state.ball.anim.px = bx; state.ball.anim.py = by; continue; }
+      var segTime = dist / speed;
+      var step = prog + (dt/segTime); if(!isFinite(step)) { seg++; prog=0; continue; }
+      step = Math.min(1, step);
+      var nx = ax + dx*step, ny = ay + dy*step;
+      state.ball.anim.px = nx; state.ball.anim.py = ny;
+      var used = (step - prog) * segTime; if(!isFinite(used) || used < 0) used = 0; dt -= used;
+      prog = step; if(prog>=1){ seg++; prog=0; }
+    }
+    draw();
+    if(seg >= points.length-1){ state.temp.animActive = false; state.ball.anim = null; if(onEnd) onEnd(); return; }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ====== Effets & Règles ====== */
+function giveThrowInToOpponent(bx,by){
+  var opp = (state.current===Team.BLUE)?Team.RED:Team.BLUE;
+  var arr = state.players[opp];
+  var best=null, bestD=1e9;
+  for(var k=0;k<arr.length;k++){
+    var p=arr[k], d=Math.abs(p.x-bx)+Math.abs(p.y-by);
+    if(d<bestD || (d===bestD && (!best || p.id<best.id))){ best=p; bestD=d; }
+  }
+  if(best){ setOwner(best); state.ball.x=best.x; state.ball.y=best.y; pushLog("Touche: "+(opp===Team.BLUE?'Bleu':'Rouge')+" #"+best.id); }
+  else { setOwner(null); }
+}
+
+function resetAllPlayersToInitial(){
+  state.players.blue = deepCopy(state.initPositions.blue);
+  state.players.red  = deepCopy(state.initPositions.red);
+}
+
+function afterGoal(scoringTeam){
+  resetAllPlayersToInitial();
+  var non = (scoringTeam===Team.BLUE)?Team.RED:Team.BLUE;
+  var arr = state.players[non];
+  var kickoff = arr[0];
+  for(var k=0;k<arr.length;k++){ if(arr[k].id===1){ kickoff = arr[k]; break; } }
+  kickoff.x = Math.floor(COLS/2); kickoff.y = Math.floor(ROWS/2);
+  setOwner(kickoff);
+  setTurn(non);
+}
+
+function goal(scoringTeam){
+  if(scoringTeam===Team.BLUE) state.score.blue++; else state.score.red++;
+  pushLog("Panier "+(scoringTeam===Team.BLUE?'Bleu':'Rouge')+" +1");
+  sGoal();
+  if(state.score.blue>=GOAL_TO_WIN || state.score.red>=GOAL_TO_WIN){
+    state.temp.gameOver=true; updateBadges(); draw(); return;
+  }
+  afterGoal(scoringTeam); updateBadges(); draw();
+}
+
+/* ====== Tir/Passe ====== */
+function tryFire(angle){
+  if(state.temp.animActive) return;
+  if(!(isBallOwned() && state.ball.ownerTeam===state.current)){ sError(); return; }
+  var res = computeRayCells(angle);
+  if(!res){ sError(); return; }
+
+  var pathCells = res.path.slice();
+
+  function onEnd(){
+    if(res.hit==='player'){
+      var last = pathCells[pathCells.length-1];
+      state.ball.x = last.x; state.ball.y = last.y;
+      setOwner(res.hitObj); pushLog("Passe à "+(res.hitObj.team===Team.BLUE?'Bleu':'Rouge')+" #"+res.hitObj.id); sCatch(); endAction(); return;
+    }
+    if(res.hit==='basket'){ goal(state.current); return; }
+    if(res.hit==='edge'){
+      var lastValid = res.lastCell; state.ball.x = lastValid.x; state.ball.y = lastValid.y; setOwner(null);
+      giveThrowInToOpponent(lastValid.x, lastValid.y); sMove(); endAction(); return;
+    }
+  }
+
+  if(res.hit==='edge' && pathCells.length>0){
+    var lv = res.lastCell; var lastCellInPath = pathCells[pathCells.length-1];
+    if(!(lastCellInPath.x===lv.x && lastCellInPath.y===lv.y)) pathCells.push({x:lv.x, y:lv.y});
+  }
+  pushLog(state.mode==='aim'? 'Tir/Passe…' : 'Action…');
+  animateBallPath(pathCells, onEnd);
+}
+
+/* ====== Entrées & UI ====== */
+addEventListener('keydown', function(e){
+  if(state && state.temp && state.temp.gameOver){ if(e.key && e.key.toLowerCase()==='n'){ e.preventDefault(); newGame(); } return; }
+  if(e.key==='h'||e.key==='H'){ e.preventDefault(); (side.classList.contains('open')?closeSide():openSide()); return; }
+  if(e.key==='n'||e.key==='N'){ newGame(); return; }
+  if(state.temp.animActive) return;
+
+  if(e.key===' '){
+    e.preventDefault(); var canAim = isBallOwned() && state.ball.ownerTeam===state.current; if(!canAim){ sError(); return; }
+    state.mode = (state.mode==='move'?'aim':'move'); updateBadges(); draw(); return;
+  }
+
+  if("12345678".indexOf(e.key)!==-1){
+    var idx = parseInt(e.key,10)-1; var team = state.current; if(idx>=0 && idx<state.players[team].length){ state.selectedIndex[team]=idx; draw(); }
+    return;
+  }
+  if(e.key==='Tab'){
+    e.preventDefault(); var t=state.current, arr=state.players[t]; var i = state.selectedIndex[t] + (e.shiftKey?-1:1); if(i<0) i=arr.length-1; if(i>=arr.length) i=0; state.selectedIndex[t]=i; draw(); return;
+  }
+
+  if(state.mode==='move'){
+    if(e.key==='ArrowUp'){ e.preventDefault(); tryMoveSelected(0,-1); return; }
+    if(e.key==='ArrowDown'){ e.preventDefault(); tryMoveSelected(0, 1); return; }
+    if(e.key==='ArrowLeft'){ e.preventDefault(); tryMoveSelected(-1,0); return; }
+    if(e.key==='ArrowRight'){ e.preventDefault(); tryMoveSelected( 1,0); return; }
+  }
+  if(state.mode==='aim'){
+    if(e.key==='ArrowLeft'){ e.preventDefault(); state.angle -= Math.PI/24; draw(); return; }
+    if(e.key==='ArrowRight'){ e.preventDefault(); state.angle += Math.PI/24; draw(); return; }
+    if(e.key==='ArrowUp'){ e.preventDefault(); state.angle += Math.PI/180; draw(); return; }
+    if(e.key==='ArrowDown'){ e.preventDefault(); state.angle -= Math.PI/180; draw(); return; }
+    if(e.key==='Enter'){ e.preventDefault(); tryFire(state.angle); return; }
+  }
+});
+
+// Boutons UI
+var helpBtn=document.getElementById('helpBtn'); var closeSideBtn=document.getElementById('closeSide'); var newBtn=document.getElementById('newBtn'); var soundBtn=document.getElementById('soundBtn'); var modeBtn=document.getElementById('modeBtn');
+helpBtn.addEventListener('click', ()=> side.classList.contains('open')?closeSide():openSide());
+closeSideBtn.addEventListener('click', closeSide);
+newBtn.addEventListener('click', newGame);
+soundBtn.addEventListener('click', ()=>{ state.settings.sound=!state.settings.sound; document.getElementById('soundIcon').style.opacity = state.settings.sound? '1':'0.5'; });
+modeBtn.addEventListener('click', ()=>{ var canAim = isBallOwned() && state.ball.ownerTeam===state.current; if(!canAim){ sError(); return; } state.mode = (state.mode==='move'?'aim':'move'); updateBadges(); draw(); });
+
+/* ====== Lancement ====== */
+fitCanvas(); newGame(); updateBadges(); draw();
+</script>
+</body>
 </html>
+
